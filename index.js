@@ -20,7 +20,7 @@ bot.on("a", async msg => {
 		if (cmd == "/convert") {
 			if (!query.startsWith("http")) query = `ytsearch:${query}`;
 			bot.say("Waiting for youtube-dl…");
-			var ytdl = youtubedl(query, ["-f 171"]);
+			var ytdl = youtubedl(query, ["-f 171/43"]);
 			var videoinfo, dlpath;
 			ytdl.on("info", info => {
 				console.log(info);
@@ -68,6 +68,9 @@ bot.on("a", async msg => {
 				var midiurl = `https://ct1.ofoct.com/get-file.php?type=get&genfpath=${encodeURIComponent(ofoctConvertedTmpFilePath)}&downloadsavename=${encodeURIComponent(ofoctConvertedFileName)}`
 				bot.say(`/u ${midiurl} [Y2M] ${ofoctConvertedFileName}`)
 			});
+			ytdl.on("complete", error => {
+				bot.say("Already converted this video!");
+			})
 			ytdl.on('error', error => {
 				if (error.message.includes("requested format not available")) {
 					bot.say("This video is not available in vorbis format :(");
